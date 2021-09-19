@@ -81,3 +81,63 @@ const menu = [
     desc: `Red bean paste dessert, serving with honey.`,
   },
 ];
+
+const categories = menu.reduce(
+  (values, item) => {
+    if (!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values;
+  },
+  ["All"]
+);
+
+const categoryList = () => {
+  document.getElementById("myButtons").innerHTML = categories
+    .map((category) => {
+      return `<button class="btn btn-outline-danger btn-item" data-id=${category}>${category}</button>`;
+    })
+    .join("");
+    
+
+  document.querySelectorAll(".btn-item").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const category = e.currentTarget.dataset.id;
+      const menuCategory = menu.filter((menuItem) => {
+        if (menuItem.category === category) {
+          return menuItem;
+        }
+      });
+      if (category === "All") {
+        menuList(menu);
+      } else {
+        menuList(menuCategory);
+      }
+    });
+  });
+};
+
+const menuList = (menuItems) => {
+  document.getElementById("myMenu").innerHTML = menuItems.map((item) => {
+    return `<div class="menu-items col-lg-6 col-sm-12">
+            <img
+              src=${item.img}
+              alt=${item.title}
+              class="photo"
+            />
+            <div class="menu-info">
+              <div class="menu-title">
+                <h4>${item.title}</h4>
+                <h4 class="price">$${item.price}</h4>
+              </div>
+              <div class="menu-text">
+                ${item.desc}
+              </div>
+            </div>
+          </div>
+    `;
+  }).join("")
+};
+
+menuList(menu);
+categoryList();
